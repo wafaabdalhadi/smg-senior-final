@@ -177,6 +177,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import 'OTPCode/SignUpPage.dart';
 import 'OTPCode/homePage.dart';
+import 'screens/location.dart';
 
 // void main() => runApp(MaterialApp(home: MyApp()));
 
@@ -185,7 +186,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     MaterialApp(
-      home: MainOTP(),
+      home: Home(),
     )
 
   );

@@ -1,111 +1,22 @@
-import 'package:avatar_glow/avatar_glow.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import '../screens/RegisterLogin.dart';
-import '../screens/page_header.dart';
+import 'dart:convert';
 
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/material.dart';
+import './location.dart';
+import '../screens/page_header.dart';
 import '../Util/bottom_bar.dart';
 import '../Util/colors.dart';
-import '../Util/text_style.dart';
-import 'location.dart';
-import 'speech.dart';
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 // import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:translator/translator.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-// class RecordingScreen extends StatefulWidget {
-//   const RecordingScreen({Key? key}) : super(key: key);
+import 'dart:convert' as convert;
 
-//   @override
-//   State<RecordingScreen> createState() => _RecordingScreenState();
-// }
-
-// class _RecordingScreenState extends State<RecordingScreen> {
-//   String text = 'Speeeech...';
-//   static final TextStyle headerStyle = TextStyle(
-//     color: KColor.mainBlueColor,
-//     fontSize: 30,
-//     fontWeight: FontWeight.bold,
-//     fontFamily: 'Lateef',
-//   );
-//   @override
-//   Widget build(BuildContext context) {
-//     return Directionality(
-//       textDirection: TextDirection.rtl,
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         bottomNavigationBar: BottomBar(),
-//         body: Column(
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//           children: [
-//             Column(
-//               children: [
-//                 PageHeader(),
-//                 SizedBox(
-//                   height: 20,
-//                 ),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Text(
-//                       'اضغط',
-//                       style: headerStyle,
-//                     ),
-//                     Icon(
-//                       Icons.mic,
-//                       color: KColor.mainBlueColor,
-//                       size: 40,
-//                     ),
-//                     Text('لبدء التسجيل', style: headerStyle),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//             Text(text),
-//             SizedBox(
-//               height: 30,
-//             ),
-//             AvatarGlow(
-//               glowColor: Color(0xff21A7CC),
-//               endRadius: 140,
-//               duration: Duration(seconds: 2),
-//               repeat: true,
-//               showTwoGlows: true,
-//               curve: Curves.easeOutQuad,
-//               child: GestureDetector(
-//                 child: GestureDetector(
-// onTap: !_hasSpeech || speech.isListening
-//       ? null
-//       : startListening,
-//                   child: Image(
-//                     width: 140.0,
-//                     image: AssetImage('images/record.png'),
-//                   ),
-//                 ),
-//                 onTap: () {
-//                   toggleRecording();
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Future toggleRecording() => SpeechApi.toggleRecording(
-
-//       onResult: (text) => setState(
-//             () {
-//               this.text = text;
-//             },
-//           ));
-// }
+import 'response.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -130,27 +41,37 @@ class _MyAppState extends State<MyApp> {
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
   String translatedText = '';
-  final text = 'الم الظهر والرأس ووجع في المعدة والبطن';
+  //final text = 'الم الظهر والرأس ووجع في المعدة والبطن';
 
   @override
   void initState() {
     super.initState();
     //  print(text);
     // print(response);
-    translate();
   }
 
-  void translate() async {
-    dynamic response = await text.translate(from: 'ar', to: 'en');
+  Future translate() async {
+    dynamic text = await lastWords.translate(from: 'ar', to: 'en');
+    String translatedText = text.toString();
+    print(translatedText);
+    var url = Uri.http('10.0.2.2:5000', '/');
+    var response = await http.post(url,
+        body: json.encode(
+          {'result': translatedText},
+        ),
+        headers: {'Content-Type': "application/json; charset=utf-8"});
 
-    // setState(() {
-    //   translatedText = response.toString();
-    // });
-    // final onDeviceTranslator = OnDeviceTranslator(
-    //     sourceLanguage: TranslateLanguage.arabic,
-    //     targetLanguage: TranslateLanguage.english);
-    // final String response = await onDeviceTranslator.translateText(text);
-    print(response.toString());
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+      String clinic = jsonResponse['clinic'];
+      dynamic clinicTrns = await clinic.translate(from: 'en', to: 'ar');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ClinicName(
+                    text: clinicTrns.toString(),
+                  )));
+    }
   }
 
   Future<void> initSpeechState() async {
@@ -217,10 +138,10 @@ class _MyAppState extends State<MyApp> {
                       items: _localeNames
                           .map(
                             (localeName) => DropdownMenuItem(
-                          value: localeName.localeId,
-                          child: Text(localeName.name),
-                        ),
-                      )
+                              value: localeName.localeId,
+                              child: Text(localeName.name),
+                            ),
+                          )
                           .toList(),
                     ),
                   ],
@@ -228,7 +149,6 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
             Text(lastWords),
-            Text(translatedText),
             AvatarGlow(
               glowColor: Color(0xff21A7CC),
               endRadius: 140,
@@ -238,8 +158,14 @@ class _MyAppState extends State<MyApp> {
               curve: Curves.easeOutQuad,
               child: GestureDetector(
                 child: GestureDetector(
-                  onTap:
-                  !_hasSpeech || speech.isListening ? null : startListening,
+                  onTap: () {
+                    if (!_hasSpeech || speech.isListening) {
+                      null;
+                    } else {
+                      startListening();
+                      print(lastStatus);
+                    }
+                  },
                   child: Image(
                     width: 140.0,
                     image: AssetImage('images/record.png'),
@@ -257,7 +183,6 @@ class _MyAppState extends State<MyApp> {
     // initSpeechState();
     lastWords = "";
     lastError = "";
-
     speech.listen(
         onResult: resultListener,
         listenFor: Duration(seconds: 10),
@@ -265,16 +190,16 @@ class _MyAppState extends State<MyApp> {
         onSoundLevelChange: soundLevelListener,
         cancelOnError: true,
         partialResults: true);
-    //translate();
     setState(() {});
   }
 
   void stopListening() {
     speech.stop();
+    translate();
     setState(() {
       level = 0.0;
     });
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   void cancelListening() {
@@ -286,8 +211,12 @@ class _MyAppState extends State<MyApp> {
 
   void resultListener(SpeechRecognitionResult result) {
     setState(() {
-      lastWords = "${result.recognizedWords} - ${result.finalResult}";
+      lastWords = "${result.recognizedWords}";
     });
+    if (lastStatus == 'notListening') {
+      translate();
+    }
+    print(lastStatus);
   }
 
   void soundLevelListener(double level) {
