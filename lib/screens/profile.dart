@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +10,20 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomBar(),
+    dynamic user = FirebaseAuth.instance.currentUser;
+    return SafeArea(
+      child: Scaffold(
+          bottomNavigationBar: BottomBar(),
+          body: Center(
+            child: Column(children: [
+              Text('' + user.phoneNumber),
+              ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  child: Text('sign out'))
+            ]),
+          )),
     );
   }
 }

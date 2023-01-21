@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RegisterInfo extends StatelessWidget {
-  RegisterInfo({
-    required this.info,required this.icon});
+  RegisterInfo({required this.info, required this.icon});
   final info;
   Icon icon;
   @override
@@ -10,7 +9,7 @@ class RegisterInfo extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         child: TextFormField(
           textDirection: TextDirection.rtl,
           decoration: InputDecoration(
@@ -19,7 +18,8 @@ class RegisterInfo extends StatelessWidget {
               ),
               filled: true,
               prefixIcon: icon,
-              hintStyle: TextStyle(color: Color(0xff21A7CC),
+              hintStyle: TextStyle(
+                color: Color(0xff21A7CC),
                 fontFamily: 'Lateef',
                 fontSize: 18,
               ),
