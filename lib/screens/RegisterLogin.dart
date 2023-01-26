@@ -6,6 +6,7 @@ import 'package:smg_senior/screens/SecretaryLogIn.dart';
 import 'package:smg_senior/screens/SecretaryRegistration.dart';
 
 import '../Util/User.dart';
+import '../Util/var.dart';
 
 class RegisterLogin extends StatefulWidget {
   const RegisterLogin({Key? key}) : super(key: key);
@@ -22,32 +23,36 @@ class _RegisterLoginState extends State<RegisterLogin> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.only(top:25, bottom: 5),
+            padding: EdgeInsets.only(top: 25, bottom: 5),
             child: Image.asset(
               'images/logo.jpeg',
               width: 130,
               height: 130,
             ),
           ),
-          Text('التوجيه الطبي الذكي',
+          Text(
+            'التوجيه الطبي الذكي',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color:  Color(0xff21A7CC),
+              color: Color(0xff21A7CC),
               fontSize: 30,
               fontFamily: 'Lateef',
             ),
+          ),
+          SizedBox(
+            height: 30,
           ),
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding:EdgeInsets.only(right: 25.0),
+                  padding: EdgeInsets.only(right: 25.0),
                   child: Text(
-                    'إنشاء حساب',
+                    ' تسجيل الدخول كــ',
                     textDirection: TextDirection.rtl,
                     style: TextStyle(
-                      color:  Color(0xff21A7CC),
+                      color: Color(0xff21A7CC),
                       fontSize: 25,
                       fontFamily: 'Lateef',
                     ),
@@ -55,42 +60,38 @@ class _RegisterLoginState extends State<RegisterLogin> {
                 ),
                 User(
                   user: 'مريض',
-                  ontap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>PatientRegister())),
+                  ontap: () {
+                    setState(() {
+                      displayName = "patient";
+                    });
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PatientLogIn()));
+                  },
                 ),
-                User(user: 'طبيب',
-                  ontap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>PatientRegister())),
-                ),
-                User(user: 'سكرتير',
-                  ontap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>SecretaryRegistration())),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding:EdgeInsets.only(right: 25.0),
-                  child: Text(
-                    'تسجيل الدخول',
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                      color:  Color(0xff21A7CC),
-                      fontSize: 25,
-                      fontFamily: 'Lateef',
-                    ),
-                  ),
-                ),
-                User(user: 'مريض',
-                  ontap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>PatientLogIn())),
-                ),
-                User(user: 'طبيب',
-                  ontap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>DoctorLogIn())),
-                ),
-                User(user: 'سكرتير',
-                  ontap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>SecretaryLogIn())),
-                ),
+                User(
+                    user: 'طبيب',
+                    ontap: () {
+                      setState(() {
+                        displayName = "doctor";
+                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DoctorLogIn()));
+                    }),
+                User(
+                    user: 'سكرتير',
+                    ontap: () {
+                      setState(() {
+                      displayName = "secretary";
+                    });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SecretaryLogIn()));
+                    }),
               ],
             ),
           ),

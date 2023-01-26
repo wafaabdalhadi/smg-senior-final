@@ -16,7 +16,8 @@ class Profile extends StatelessWidget {
           bottomNavigationBar: BottomBar(),
           body: Center(
             child: Column(children: [
-              Text('' + user.phoneNumber),
+              Text(''+user.email),
+              Text(user.displayName??''),
               ElevatedButton(
                   onPressed: () {
                     FirebaseAuth.instance.signOut();

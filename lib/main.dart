@@ -3,11 +3,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:smg_senior/OTPCode/SignUpPage.dart';
 import 'package:smg_senior/OTPCode/mainOTP.dart';
+import 'package:smg_senior/screens/DoctorRegister.dart';
+import 'package:smg_senior/screens/DoctorRegisterNextStep.dart';
 import 'package:smg_senior/screens/PatientLogin.dart';
 import 'package:smg_senior/screens/intro_screen.dart';
 import 'package:smg_senior/screens/location.dart';
 import 'package:smg_senior/screens/recording_screen.dart';
+import 'package:smg_senior/screens/response.dart';
+import 'package:smg_senior/screens/welcome.dart';
 
+import 'Util/var.dart';
 import 'screens/RegisterLogin.dart';
 import 'screens/profile.dart';
 
@@ -18,7 +23,7 @@ void main() async {
   runApp(MaterialApp(
     navigatorKey: navigatorKey,
     debugShowCheckedModeBanner: false,
-    home: Home(),
+    home: Welcome(),
   ));
 }
 
@@ -39,9 +44,9 @@ class MainHome extends StatelessWidget {
             child: Text('Something went wrong!'),
           );
         } else if (snapshot.hasData) {
-          return Profile();
+          return DoctorRegisterNextStep();
         }
-        return Intro();
+        return RegisterLogin();
       },
     );
   }

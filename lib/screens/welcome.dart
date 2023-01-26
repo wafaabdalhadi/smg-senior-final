@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:smg_senior/main.dart';
 import 'dart:math' as math;
 
 import 'RegisterLogin.dart';
@@ -21,7 +22,7 @@ class _WelcomeState extends State<Welcome>
     // TODO: implement initState
     super.initState();
     Timer(Duration(seconds: 6),
-            ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterLogin())));
+            ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainHome())));
   }
   @override
   Widget build(BuildContext context) {

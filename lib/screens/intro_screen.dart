@@ -158,18 +158,17 @@ class _IntroState extends State<Intro> {
     try {
       print(emailController.text.trim());
       print(passwordController.text.trim());
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-              child: CircularProgressIndicator(),
-            ));
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => Center(
+                child: CircularProgressIndicator(),
+              ));
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyApp()));
-    } on FirebaseAuthException catch (e) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+    } catch (e) {
       print(e);
       Navigator.pop(context);
     }
